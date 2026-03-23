@@ -294,7 +294,7 @@ HTML_TEMPLATE = """
                             <option value="lamail">LaMail 体系</option>
                             <option value="duckmail">DuckMail 体系</option>
                             <option value="cfmail">Cloudflare (CFMail) 体系</option>
-                            <option value="tempmail.lol">TempMail.lol 体系</option>
+                            <option value="tempmail_lol">TempMail.lol 体系</option>
                         </select>
                     </div>
 
@@ -315,6 +315,11 @@ HTML_TEMPLATE = """
                         <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
                         <div><label class="block text-sm font-semibold text-slate-600 mb-1">API 地址</label><input type="text" v-model="config.duckmail_api_base" class="input-field"></div>
                         <div><label class="block text-sm font-semibold text-slate-600 mb-1">Bearer Token</label><input type="password" v-model="config.duckmail_bearer" class="input-field"></div>
+                    </div>
+
+                    <div v-if="config.mail_provider === 'tempmail_lol'" class="p-4 bg-white rounded-lg border border-slate-200 space-y-3 relative overflow-hidden shadow-sm">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                        <div><label class="block text-sm font-semibold text-slate-600 mb-1">API 地址 (可选)</label><input type="text" v-model="config.tempmail_lol_api_base" class="input-field" placeholder="默认: https://api.tempmail.lol/v2"></div>
                     </div>
                 </div>
             </div>
@@ -369,6 +374,7 @@ HTML_TEMPLATE = """
                     probe_workers: 12,
                     probe_timeout: 10,
                     mail_provider: 'lamail',
+                    tempmail_lol_api_base: 'https://api.tempmail.lol/v2',
                     proxy: ''
                 });
                 const saving = ref(false);
