@@ -1,3 +1,13 @@
+---
+title: CPA Auto Scheduler
+emoji: 🚀
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # auto_cpa_register
 
 一个用于 ChatGPT 账号自动注册与补量的 Python 项目，支持：
