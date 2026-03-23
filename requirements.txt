@@ -1,2 +1,4 @@
 curl_cffi
 Flask
+gunicorn
+psutil
