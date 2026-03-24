@@ -302,7 +302,7 @@ HTML_TEMPLATE = """
                         <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                         <div><label class="block text-sm font-semibold text-slate-600 mb-1">API 地址</label><input type="text" v-model="config.lamail_api_base" class="input-field"></div>
                         <div><label class="block text-sm font-semibold text-slate-600 mb-1">API Key</label><input type="password" v-model="config.lamail_api_key" class="input-field"></div>
-                        <div><label class="block text-sm font-semibold text-slate-600 mb-1">自定义 Domain</label><input type="text" v-model="config.lamail_domain" class="input-field"></div>
+                        <div><label class="block text-sm font-semibold text-slate-600 mb-1">自定义 Domain (逗号分隔多个)</label><input type="text" v-model="config.lamail_domain" class="input-field" placeholder="留空或填多个例: a.com, b.com"></div>
                     </div>
                     
                     <div v-if="config.mail_provider === 'cfmail'" class="p-4 bg-white rounded-lg border border-slate-200 space-y-3 relative overflow-hidden shadow-sm">

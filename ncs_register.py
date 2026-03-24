@@ -1520,7 +1520,9 @@ class ChatGPTRegister:
 
         payload = {}
         if LAMAIL_DOMAIN:
-            payload["domain"] = LAMAIL_DOMAIN
+            domains = [d.strip() for d in LAMAIL_DOMAIN.split(",") if d.strip()]
+            if domains:
+                payload["domain"] = random.choice(domains)
 
         headers = _lamail_headers(use_json=True, api_key=LAMAIL_API_KEY)
         try:
