@@ -1,29 +1,29 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=20080 \
+    GUNICORN_WORKERS=1 \
+    GUNICORN_THREADS=8 \
+    GUNICORN_TIMEOUT=120
 
-# Install dependencies before copying the rest to use Docker cache better
-COPY requirements.txt .
+WORKDIR /app
 
-# Upgrade pip and install requirements
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-# Hugging Face Spaces require running as a non-root user
-RUN useradd -m -u 1000 user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
+COPY requirements.txt ./
 
-WORKDIR $HOME/app
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-COPY --chown=user:user . .
+COPY . .
 
-# Change permissions to ensure the app has read/write access everywhere
-RUN chmod -R 777 $HOME/app
+EXPOSE 20080
 
-ENV PORT=7860
-EXPOSE 7860
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD curl -fsS http://127.0.0.1:20080/ >/dev/null || exit 1
 
-CMD ["python", "webui.py"]
+CMD ["sh", "-c", "exec gunicorn --worker-class gthread --workers ${GUNICORN_WORKERS:-1} --threads ${GUNICORN_THREADS:-8} --bind 0.0.0.0:${PORT:-20080} --timeout ${GUNICORN_TIMEOUT:-120} --access-logfile - --error-logfile - webui:app"]

@@ -8,3 +8,4 @@ registered_accounts.txt
 zhuce5_cfmail_accounts.json
 codex_tokens/
 config.json
+.env

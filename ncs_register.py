@@ -1984,6 +1984,15 @@ class ChatGPTRegister:
         headers = {"Content-Type": "application/json", "Accept": "application/json",
                     "Referer": f"{self.AUTH}/about-you", "Origin": self.AUTH}
         headers.update(_make_trace_headers())
+        sentinel_token = build_sentinel_token(
+            self.session, self.device_id,
+            user_agent=self.ua, sec_ch_ua=self.sec_ch_ua, impersonate=self.impersonate,
+        )
+        if not sentinel_token:
+            data = {"error": "sentinel_token_build_failed"}
+            self._log("7. Create Account", "POST", url, 0, data)
+            return 0, data
+        headers["openai-sentinel-token"] = sentinel_token
         r = self.session.post(url, json={"name": name, "birthdate": birthdate}, headers=headers)
         try:
             data = r.json()
@@ -2041,7 +2050,9 @@ class ChatGPTRegister:
         elif "about-you" in final_path:
             self._print("跳到填写信息阶段")
             _random_delay(0.5, 1.0)
-            self.create_account(name, birthdate)
+            status, data = self.create_account(name, birthdate)
+            if status != 200:
+                raise Exception(f"Create account 失败 ({status}): {data}")
             _random_delay(0.3, 0.5)
             self.callback()
             return True

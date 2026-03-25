@@ -534,6 +534,6 @@ def save_config():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 20080))
     print(f"[Web UI] 启动中，将在浏览器打开界面... 端口: {port}")
     app.run(host="0.0.0.0", port=port, debug=False)
